@@ -9,7 +9,7 @@ defmodule AbtDid.Application do
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: AbtDid.Worker.start_link(arg)
-      # { AbtDid.Worker, arg},
+      # {AbtDid.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

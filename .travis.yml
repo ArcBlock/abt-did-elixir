@@ -13,9 +13,11 @@ script: make travis
 before_script: make travis-init
 before_deploy: make travis-deploy
 deploy:
+  matrix:
   - provider: releases
     skip_cleanup: true
-    api_key: run this command "echo $GITHUB_TOKEN | travis encrypt --add deploy.api_key".
+    api_key:
+      secure: rWZBiOMdJZHwxAuk/jxtxFvL4B+meNTtGuFqCEoEqwnBxth+IDnY3tu735wL6YTbDH0jNDEUzrl6Aw1TfefW/z3ynvyRkGwwPn93ts/7sHpsgPUuS9xGVzWG2QS5JC+fIMURZJR34dn9QZ14oXWCvYNy2ilx/+V1JKG7r7jqOO+9Lt0L08UNgvMRscxnbSJNm5AobV97qen+05gfJRw6jt+NCJnUWExpspULTIKT1UcXJjUXLxv4pMr96Ch11/ZbGa9bKg4h9+JBeq0XKxGG9s4VCedA/Zs0PSECpTTq198jsytkCeBzk5AgvIxNjfMGzxA0lI278M3egv0Su5mBljlbszeru1FFj1Mp6/sE17q7NEZBy/aNHdibd3COP2+LWMJf69Qe9YxYQn+7dadv/HPRpEU2FA7noNgXeEx5+aqv3UyGWuQ4QTQAKUkj6Xzw0yF/re3nVPtiAmoiqnfup2dEBJL2U1Dt0AH2rr7+bi24XRSPE9hjWLxVjiLcT9CMvvUqKlHNGXD2e6/iGEp6pOkG+Jka434loGfXNSx2VptdZiCZAtwKGNp0u5uqSQouXqCMPvCTvuGvIJW7le++vjF4tlfde+e92yo+zaMHhwEjlA+ydM5Ed0rCXY1gKDIwHRbzeKnIcOWPMPqgwkTU+4g2votN+u6mBUPgG42Z5As=
     file_glob: true
     file: src/_build/releases/*
     on:
