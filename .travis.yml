@@ -1,0 +1,26 @@
+language: elixir
+elixir: 1.7.4
+otp_release: 21.1.1
+branches:
+  only:
+    - master
+before_install:
+  - sudo apt-get install -y rpm2cpio wget
+  - nvm install 10
+install:
+  - epmd -daemon
+script: make travis
+before_script: make travis-init
+before_deploy: make travis-deploy
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    api_key: run this command "echo $GITHUB_TOKEN | travis encrypt --add deploy.api_key".
+    file_glob: true
+    file: src/_build/releases/*
+    on:
+      repo: ArcBlock/ABT-DID-elixir
+      branch: master
+notifications:
+  slack:
+    secure:
