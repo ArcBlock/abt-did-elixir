@@ -1,3 +1,6 @@
+## 0.1.7 (February 05, 2019)
+- Rename the repo.
+
 ## 0.1.6 (February 05, 2019)
 - Change elixir and otp version.
 
