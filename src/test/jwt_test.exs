@@ -2,7 +2,6 @@ defmodule AbtDidTest.Jwt do
   use ExUnit.Case
 
   alias AbtDid.Jwt
-  alias AbtDid.Type
 
   test "ed25519 should work" do
     {pk, sk} = Mcrypto.Signer.keypair(%Mcrypto.Signer.Ed25519{})

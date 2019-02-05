@@ -50,6 +50,9 @@ defmodule AbtDid.MixProject do
       # mcrypto
       {:mcrypto, "~> 0.1"},
 
+      # deployment
+      {:distillery, "~> 2.0", override: true},
+
       # dev & test
       {:excoveralls, "~> 0.10", only: [:test, :integration]}
     ]
