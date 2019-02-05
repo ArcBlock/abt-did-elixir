@@ -13,7 +13,6 @@ script: make travis
 before_script: make travis-init
 before_deploy: make travis-deploy
 deploy:
-  matrix:
   - provider: releases
     skip_cleanup: true
     api_key:
