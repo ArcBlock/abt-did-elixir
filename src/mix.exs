@@ -4,10 +4,12 @@ defmodule AbtDid.MixProject do
   @top File.cwd!()
 
   @version @top |> Path.join("../version") |> File.read!() |> String.trim()
-  @elixir_version @top
-                  |> Path.join(".elixir_version")
-                  |> File.read!()
-                  |> String.trim()
+  @elixir_version @top |> Path.join(".elixir_version") |> File.read!() |> String.trim()
+  @otp_version @top |> Path.join(".otp_version") |> File.read!() |> String.trim()
+
+  def get_version, do: @version
+  def get_elixir_version, do: @elixir_version
+  def get_otp_version, do: @otp_version
 
   def project do
     [
@@ -49,6 +51,14 @@ defmodule AbtDid.MixProject do
 
       # mcrypto
       {:mcrypto, "~> 0.1"},
+
+      # utility tools for error logs and metrics
+      {:ex_datadog_plug, "~> 0.5.0"},
+      {:logger_sentry, "~> 0.2"},
+      {:recon, "~> 2.3"},
+      {:recon_ex, "~> 0.9.1"},
+      {:sentry, "~> 7.0"},
+      {:statix, "~> 1.1"},
 
       # deployment
       {:distillery, "~> 2.0", override: true},

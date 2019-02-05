@@ -27,7 +27,7 @@ environment :prod do
   set(cookie: :"&CKitUm*!T%K}XTR6tBo3A:Z/XcX5k<n7dNju?4%(Q/Umfn872[*kr}):b$%y*:d")
 end
 
-release : do
+release :abt_did do
   set(version: version)
 
   set(
@@ -36,7 +36,7 @@ release : do
       logger_sentry: :permanent,
       parse_trans: :permanent,
       recon: :permanent,
-      recon_ex: :permanent,
+      recon_ex: :permanent
       # arc_auth_service: :permanent # Put your application here
     ]
   )
