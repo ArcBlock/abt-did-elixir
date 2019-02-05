@@ -2,14 +2,14 @@ TOP_DIR=.
 OUTPUT_DIR=$(TOP_DIR)/output
 README=$(TOP_DIR)/README.md
 
-BUILD_NAME=
+BUILD_NAME=abt_did
 VERSION=$(strip $(shell cat version))
 ELIXIR_VERSION=$(strip $(shell cat src/.elixir_version))
 OTP_VERSION=$(strip $(shell cat src/.otp_version))
 
 build:
 	@echo "Building the software..."
-	@rm -rf src/_build/dev/lib/
+	@rm -rf src/_build/dev/lib/abt_did
 	@make format
 
 format:
