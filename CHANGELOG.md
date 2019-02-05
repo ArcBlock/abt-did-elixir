@@ -1,3 +1,6 @@
+## 0.1.6 (February 05, 2019)
+- Change elixir and otp version.
+
 ## 0.1.5 (February 05, 2019)
 - Update deps.
   
