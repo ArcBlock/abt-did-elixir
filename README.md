@@ -1,3 +1,3 @@
-## ABT-DID-elixir
+## ABT-DID
 
 Elixir implementation of ABT DID protocol.

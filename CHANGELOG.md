@@ -1,3 +1,6 @@
+## 0.1.12 (February 05, 2019)
+- Rename to abt-did.
+  
 ## 0.1.11 (February 05, 2019)
 - Update make file.
 

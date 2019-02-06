@@ -20,7 +20,7 @@ deploy:
     file_glob: true
     file: _build/releases/*
     on:
-      repo: ArcBlock/ABT-DID-elixir
+      repo: ArcBlock/abt-did
       branch: master
 notifications:
   slack:
