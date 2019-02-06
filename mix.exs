@@ -52,14 +52,6 @@ defmodule AbtDid.MixProject do
       # mcrypto
       {:mcrypto, "~> 0.1"},
 
-      # utility tools for error logs and metrics
-      {:ex_datadog_plug, "~> 0.5.0"},
-      {:logger_sentry, "~> 0.2"},
-      {:recon, "~> 2.3"},
-      {:recon_ex, "~> 0.9.1"},
-      {:sentry, "~> 7.0"},
-      {:statix, "~> 1.1"},
-
       # deployment
       {:distillery, "~> 2.0", runtime: false},
 

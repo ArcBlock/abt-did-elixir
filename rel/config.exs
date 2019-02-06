@@ -32,12 +32,7 @@ release :abt_did do
 
   set(
     applications: [
-      :runtime_tools,
-      logger_sentry: :permanent,
-      parse_trans: :permanent,
-      recon: :permanent,
-      recon_ex: :permanent
-      # arc_auth_service: :permanent # Put your application here
+      :runtime_tools
     ]
   )
 end
