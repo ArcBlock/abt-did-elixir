@@ -27,7 +27,7 @@ environment :prod do
   set(cookie: :"&CKitUm*!T%K}XTR6tBo3A:Z/XcX5k<n7dNju?4%(Q/Umfn872[*kr}):b$%y*:d")
 end
 
-release :abt_did_elixir do
+release :abt_did do
   set(version: version)
 
   set(

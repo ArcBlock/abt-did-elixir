@@ -1,3 +1,6 @@
+## 0.1.9 (February 05, 2019)
+- Rename to abt_did.
+
 ## 0.1.8 (February 05, 2019)
 - Remove src folder.
 
