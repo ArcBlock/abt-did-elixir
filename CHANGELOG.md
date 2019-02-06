@@ -1,3 +1,6 @@
+## 0.1.11 (February 05, 2019)
+- Update make file.
+
 ## 0.1.10 (February 05, 2019)
 - Remove unnecessary deps.
 

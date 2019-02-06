@@ -40,7 +40,7 @@ all: pre-build build post-build
 
 test:
 	@echo "Running test suites..."
-	@MIX_ENV=test mix test
+	@MIX_ENV=test mix test --no-start
 
 doc:
 	@echo "Building the documentation..."
