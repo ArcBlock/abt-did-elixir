@@ -3,7 +3,7 @@ defmodule AbtDid.MixProject do
 
   @top File.cwd!()
 
-  @version @top |> Path.join("../version") |> File.read!() |> String.trim()
+  @version @top |> Path.join("version") |> File.read!() |> String.trim()
   @elixir_version @top |> Path.join(".elixir_version") |> File.read!() |> String.trim()
   @otp_version @top |> Path.join(".otp_version") |> File.read!() |> String.trim()
 
@@ -61,7 +61,7 @@ defmodule AbtDid.MixProject do
       {:statix, "~> 1.1"},
 
       # deployment
-      {:distillery, "~> 2.0", override: true},
+      {:distillery, "~> 2.0", runtime: false},
 
       # dev & test
       {:excoveralls, "~> 0.10", only: [:test, :integration]}
