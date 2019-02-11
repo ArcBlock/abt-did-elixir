@@ -59,6 +59,8 @@ defmodule AbtDid.Jwt do
 
     signature = Base.url_decode64!(signature, padding: false)
     Mcrypto.verify(signer, header <> "." <> body, signature, pk) && AbtDid.match_pk?(did, pk)
+  rescue
+    _ -> false
   end
 
   defp get_signer(%{"alg" => "ES256K", "typ" => "JWT"}), do: @secp256k1

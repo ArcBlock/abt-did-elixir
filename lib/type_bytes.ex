@@ -77,6 +77,7 @@ defmodule AbtDid.TypeBytes do
   defp role_type_to_bytes(:asset), do: <<6>>
   defp role_type_to_bytes(:stake), do: <<7>>
   defp role_type_to_bytes(:validator), do: <<8>>
+  defp role_type_to_bytes(:group), do: <<9>>
   defp role_type_to_bytes(:any), do: <<63>>
   defp role_type_to_bytes(role), do: raise("Invliad role type: #{inspect(role)}")
 
@@ -89,6 +90,7 @@ defmodule AbtDid.TypeBytes do
   defp bytes_to_role_type(<<6>>), do: :asset
   defp bytes_to_role_type(<<7>>), do: :stake
   defp bytes_to_role_type(<<8>>), do: :validator
+  defp bytes_to_role_type(<<9>>), do: :group
   defp bytes_to_role_type(<<63>>), do: :any
   defp bytes_to_role_type(role), do: raise("Invliad role type: #{inspect(role)}")
 
