@@ -15,7 +15,8 @@ defmodule AbtDidTest do
       :bot,
       :stake,
       :asset,
-      :validator
+      :validator,
+      :group
     ]
 
     key = [:ed25519, :secp256k1]
