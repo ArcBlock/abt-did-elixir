@@ -1,3 +1,6 @@
+## 0.1.15 (February 11, 2019)
+
+
 ## 0.1.14 (February 11, 2019)
   - Add GROUP DID role type.
 
