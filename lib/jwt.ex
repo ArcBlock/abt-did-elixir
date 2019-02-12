@@ -29,6 +29,7 @@ defmodule AbtDid.Jwt do
         "exp" => "#{inspect(now + @min_30)}"
       }
       |> Map.merge(extra)
+      |> clean_data()
       |> Jason.encode!()
       |> Base.url_encode64(padding: false)
       |> gen(did_type.key_type)
@@ -74,4 +75,11 @@ defmodule AbtDid.Jwt do
 
   defp gen(body, :secp256k1), do: @header_secp256k1 <> "." <> body
   defp gen(body, :ed25519), do: @header_ed25519 <> "." <> body
+
+  defp clean_data(data) do
+    data
+    |> Map.to_list()
+    |> Enum.reject(fn {_, value} -> is_nil(value) or "" === value end)
+    |> Enum.into(%{})
+  end
 end
