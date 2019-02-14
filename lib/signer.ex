@@ -69,7 +69,6 @@ defmodule AbtDid.Signer do
       "secp256k1" -> @secp256k1
       "es256k" -> @secp256k1
       "ed25519" -> @ed25519
-      "eddsa" -> @ed25519
     end
   end
 
