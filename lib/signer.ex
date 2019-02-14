@@ -1,4 +1,4 @@
-defmodule AbtDid.Jwt do
+defmodule AbtDid.Signer do
   alias AbtDid
   alias AbtDid.Type
 
@@ -64,8 +64,14 @@ defmodule AbtDid.Jwt do
     _ -> false
   end
 
-  defp get_signer(%{"alg" => "ES256K", "typ" => "JWT"}), do: @secp256k1
-  defp get_signer(%{"alg" => "Ed25519", "typ" => "JWT"}), do: @ed25519
+  defp get_signer(%{"alg" => alg}) do
+    case String.downcase(alg) do
+      "secp256k1" -> @secp256k1
+      "es256k" -> @secp256k1
+      "ed25519" -> @ed25519
+      "eddsa" -> @ed25519
+    end
+  end
 
   defp sign(:secp256k1, data, sk),
     do: Mcrypto.sign!(@secp256k1, data, sk) |> Base.url_encode64(padding: false)
