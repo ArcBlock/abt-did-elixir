@@ -14,7 +14,7 @@ defmodule AbtDid.Signer do
   @min_30 60 * 30
 
   @doc """
-  Generates and signs the challenge.
+  Generates and signs the token.
   """
   @spec gen_and_sign(Type.t(), binary(), map()) :: String.t()
   def gen_and_sign(did_type, sk, extra \\ %{}) do
@@ -39,12 +39,12 @@ defmodule AbtDid.Signer do
   end
 
   @doc """
-  Verifies if the `challenge` is signed by the secret key of the `pk` and also
-  verifies if the DID contained in the iss field of the `challenge` matches the `pk`.
+  Verifies if the `token` is signed by the secret key of the `pk` and also
+  verifies if the DID contained in the iss field of the `token` matches the `pk`.
   """
   @spec verify(String.t(), binary()) :: boolean
-  def verify(challenge, pk) do
-    [header, body, signature] = String.split(challenge, ".")
+  def verify(token, pk) do
+    [header, body, signature] = String.split(token, ".")
 
     signer =
       header
