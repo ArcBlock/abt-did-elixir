@@ -12,30 +12,22 @@ defmodule AbtDid.Signer do
                   |> Jason.encode!()
                   |> Base.url_encode64(padding: false)
   @min_30 60 * 30
+  @prefix "did:abt:"
 
   @doc """
   Generates and signs the token.
   """
-  @spec gen_and_sign(Type.t(), binary(), map()) :: String.t()
-  def gen_and_sign(did_type, sk, extra \\ %{}) do
+  @spec gen_and_sign(Type.t() | String.t(), binary(), map()) :: String.t()
+  def gen_and_sign(_, _, extra \\ %{})
+
+  def gen_and_sign(%Type{} = did_type, sk, extra) do
     did = AbtDid.sk_to_did(did_type, sk)
-    now = DateTime.utc_now() |> DateTime.to_unix()
+    do_gen_and_sign(did_type, did, sk, extra)
+  end
 
-    data =
-      %{
-        "iss" => did,
-        "iat" => "#{inspect(now)}",
-        "nbf" => "#{inspect(now)}",
-        "exp" => "#{inspect(now + @min_30)}"
-      }
-      |> Map.merge(extra)
-      |> clean_data()
-      |> Jason.encode!()
-      |> Base.url_encode64(padding: false)
-      |> gen(did_type.key_type)
-
-    sig = sign(did_type.key_type, data, sk)
-    data <> "." <> sig
+  def gen_and_sign(did, sk, extra) do
+    did_type = AbtDid.get_did_type(did)
+    do_gen_and_sign(did_type, did, sk, extra)
   end
 
   @doc """
@@ -62,6 +54,32 @@ defmodule AbtDid.Signer do
     Mcrypto.verify(signer, header <> "." <> body, signature, pk) && AbtDid.match_pk?(did, pk)
   rescue
     _ -> false
+  end
+
+  defp do_gen_and_sign(did_type, did, sk, extra) do
+    full_did =
+      case did do
+        @prefix <> _ -> did
+        _ -> @prefix <> did
+      end
+
+    now = DateTime.utc_now() |> DateTime.to_unix()
+
+    data =
+      %{
+        "iss" => full_did,
+        "iat" => "#{inspect(now)}",
+        "nbf" => "#{inspect(now)}",
+        "exp" => "#{inspect(now + @min_30)}"
+      }
+      |> Map.merge(extra)
+      |> clean_data()
+      |> Jason.encode!()
+      |> Base.url_encode64(padding: false)
+      |> gen(did_type.key_type)
+
+    sig = sign(did_type.key_type, data, sk)
+    data <> "." <> sig
   end
 
   defp get_signer(%{"alg" => alg}) do
