@@ -1,3 +1,6 @@
+## 0.1.16 (February 14, 2019)
+  - Rename Jwt to Signer
+
 ## 0.1.15 (February 11, 2019)
 
 
