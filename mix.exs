@@ -13,7 +13,7 @@ defmodule AbtDid.MixProject do
 
   def project do
     [
-      app: :abt_did,
+      app: :abt_did_elixir,
       version: @version,
       elixir: @elixir_version,
       elixirc_paths: elixirc_paths(Mix.env()),
