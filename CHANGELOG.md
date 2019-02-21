@@ -1,3 +1,6 @@
+## 0.1.17 (February 21, 2019)
+  - Rename to abt-did-elixir
+
 ## 0.1.16 (February 14, 2019)
   - Rename Jwt to Signer
 
