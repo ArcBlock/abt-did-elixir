@@ -7,6 +7,7 @@ defmodule AbtDid do
   alias AbtDid.Type, as: DidType
   alias Mcrypto.Hasher.Keccak
   alias Mcrypto.Hasher.Sha3
+  alias Mcrypto.Hasher.Sha2
 
   @ed25519 %Mcrypto.Signer.Ed25519{}
   @secp256k1 %Mcrypto.Signer.Secp256k1{}
@@ -17,6 +18,7 @@ defmodule AbtDid do
   @sha3 %Sha3{}
   @sha3_384 %Sha3{size: 384}
   @sha3_512 %Sha3{size: 512}
+  @sha256 %Sha2{round: 1}
 
   @prefix "did:abt:"
 
@@ -28,6 +30,22 @@ defmodule AbtDid do
       iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
       iex> AbtDid.sk_to_did(%AbtDid.Type{}, sk)
       "did:abt:z1ioGHFYiEemfLa3hQjk4JTwWTQPu1g2YxP"
+
+      iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
+      iex> AbtDid.sk_to_did(AbtDid.Type.node, sk)
+      "did:abt:z89nF4GRYvgw5mqk8NqVVC7NeZLWKbcbQY7V"
+
+      iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
+      iex> AbtDid.sk_to_did(AbtDid.Type.validator, sk)
+      "did:abt:zyt2vg6n8424c9xdXLGj1g27finM77ZN5KQL"
+
+      iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
+      iex> AbtDid.sk_to_did(%AbtDid.Type{role_type: :node}, sk)
+      ** (RuntimeError) The hash_type must be :sha256 and key_type must be :ed25519 if the role_type is :node or :validator.
+
+      iex> sk = "26954E19E8781905E2CF91A18AE4F36A954C142176EE1BC27C2635520C49BC55" |> Base.decode16!()
+      iex> AbtDid.sk_to_did(%AbtDid.Type{role_type: :validator, key_type: :secp256k1}, sk)
+      ** (RuntimeError) The hash_type must be :sha256 and key_type must be :ed25519 if the role_type is :node or :validator.
 
       iex> sk = "26954E19E8781905E2CF91A18AE4F36A954C142176EE1BC27C2635520C49BC55" |> Base.decode16!()
       iex> AbtDid.sk_to_did(%AbtDid.Type{key_type: :secp256k1}, sk)
@@ -60,6 +78,7 @@ defmodule AbtDid do
   """
   @spec pk_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
   def pk_to_did(did_type, pk, opts \\ []) do
+    AbtDid.Type.check_did_type!(did_type)
     type_bytes = TypeBytes.struct_to_bytes(did_type)
     <<pk_hash::binary-size(20), _::binary>> = hash(did_type.hash_type, pk)
     <<check_sum::binary-size(4), _::binary>> = hash(did_type.hash_type, type_bytes <> pk_hash)
@@ -143,6 +162,30 @@ defmodule AbtDid do
     TypeBytes.bytes_to_struct(type_bytes)
   end
 
+  @doc """
+  Gets the public key hash of this DID.
+
+  ## Examples
+
+      iex> pk = <<136, 159, 157, 15, 85, 1, 98, 93, 76, 139, 60, 21, 243, 144, 249, 180, 60, 69, 140, 215, 195, 6, 33, 122, 117, 140, 241, 209, 47, 83, 173, 77>>
+      iex> did = AbtDid.pk_to_did(AbtDid.Type.validator, pk)
+      iex> AbtDid.get_pubkey_hash(did)
+      "BB6FD53B8B12E79CE94768B0349836AB9ED81D85"
+  """
+  @spec get_pubkey_hash(<<_::8, _::_*8>>, keyword()) :: binary()
+  def get_pubkey_hash(did, opts \\ [encode: true])
+  def get_pubkey_hash(@prefix <> did, opts), do: get_pubkey_hash(did, opts)
+
+  def get_pubkey_hash(did, opts) do
+    <<_::binary-size(2), pubkey_hash::binary-size(20), _::binary-size(4)>> =
+      Multibase.decode!(did)
+
+    case Keyword.get(opts, :encode, true) do
+      true -> Base.encode16(pubkey_hash)
+      _ -> pubkey_hash
+    end
+  end
+
   ############   private functiosn    ############
 
   defp sk_to_pk(:ed25519, sk), do: Mcrypto.sk_to_pk(@ed25519, sk)
@@ -154,4 +197,5 @@ defmodule AbtDid do
   defp hash(:sha3_384, data), do: Mcrypto.hash(@sha3_384, data)
   defp hash(:keccak_512, data), do: Mcrypto.hash(@keccak_512, data)
   defp hash(:sha3_512, data), do: Mcrypto.hash(@sha3_512, data)
+  defp hash(:sha256, data), do: Mcrypto.hash(@sha256, data)
 end

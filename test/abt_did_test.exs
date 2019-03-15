@@ -6,19 +6,7 @@ defmodule AbtDidTest do
   doctest AbtDid
 
   test "Generate did and verify with PK" do
-    role = [
-      :account,
-      :node,
-      :device,
-      :application,
-      :smart_contract,
-      :bot,
-      :stake,
-      :asset,
-      :validator,
-      :group
-    ]
-
+    role = [:account, :device, :application, :smart_contract, :bot, :stake, :asset, :group]
     key = [:ed25519, :secp256k1]
     hash = [:keccak, :sha3, :keccak_384, :sha3_384, :keccak_512, :sha3_512]
 
@@ -41,6 +29,21 @@ defmodule AbtDidTest do
           assert true === AbtDid.match_pk?(did, pk)
         end)
       end)
+    end)
+  end
+
+  test "Node and Validator, generate did and verify with PK" do
+    role = [:node, :validator]
+
+    Enum.each(role, fn r ->
+      type = %Type{role_type: r, key_type: :ed25519, hash_type: :sha256}
+
+      sk = :crypto.strong_rand_bytes(64)
+      pk = TestUtil.sk_to_pk(:ed25519, sk)
+      did = AbtDid.sk_to_did(type, sk)
+      assert String.length(did) >= 35
+      assert true === AbtDid.is_valid?(did)
+      assert true === AbtDid.match_pk?(did, pk)
     end)
   end
 end
