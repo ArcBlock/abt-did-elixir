@@ -18,7 +18,7 @@ defmodule AbtDid do
   @sha3 %Sha3{}
   @sha3_384 %Sha3{size: 384}
   @sha3_512 %Sha3{size: 512}
-  @sha256 %Sha2{round: 1}
+  @sha2 %Sha2{round: 1}
 
   @prefix "did:abt:"
 
@@ -41,11 +41,11 @@ defmodule AbtDid do
 
       iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
       iex> AbtDid.sk_to_did(%AbtDid.Type{role_type: :node}, sk)
-      ** (RuntimeError) The hash_type must be :sha256 and key_type must be :ed25519 if the role_type is :node or :validator.
+      ** (RuntimeError) The hash_type must be :sha2 and key_type must be :ed25519 if the role_type is :node or :validator.
 
       iex> sk = "26954E19E8781905E2CF91A18AE4F36A954C142176EE1BC27C2635520C49BC55" |> Base.decode16!()
       iex> AbtDid.sk_to_did(%AbtDid.Type{role_type: :validator, key_type: :secp256k1}, sk)
-      ** (RuntimeError) The hash_type must be :sha256 and key_type must be :ed25519 if the role_type is :node or :validator.
+      ** (RuntimeError) The hash_type must be :sha2 and key_type must be :ed25519 if the role_type is :node or :validator.
 
       iex> sk = "26954E19E8781905E2CF91A18AE4F36A954C142176EE1BC27C2635520C49BC55" |> Base.decode16!()
       iex> AbtDid.sk_to_did(%AbtDid.Type{key_type: :secp256k1}, sk)
@@ -197,5 +197,5 @@ defmodule AbtDid do
   defp hash(:sha3_384, data), do: Mcrypto.hash(@sha3_384, data)
   defp hash(:keccak_512, data), do: Mcrypto.hash(@keccak_512, data)
   defp hash(:sha3_512, data), do: Mcrypto.hash(@sha3_512, data)
-  defp hash(:sha256, data), do: Mcrypto.hash(@sha256, data)
+  defp hash(:sha2, data), do: Mcrypto.hash(@sha2, data)
 end
