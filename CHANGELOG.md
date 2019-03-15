@@ -1,3 +1,6 @@
+## 0.2.0 (March 15, 2019)
+  - Add method to get pubkey hash from DID and make this compatible with Tendermint.
+
 ## 0.1.17 (February 21, 2019)
   - Rename to abt-did-elixir
 
