@@ -36,7 +36,7 @@ defmodule AbtDidTest do
     role = [:node, :validator]
 
     Enum.each(role, fn r ->
-      type = %Type{role_type: r, key_type: :ed25519, hash_type: :sha256}
+      type = %Type{role_type: r, key_type: :ed25519, hash_type: :sha2}
 
       sk = :crypto.strong_rand_bytes(64)
       pk = TestUtil.sk_to_pk(:ed25519, sk)

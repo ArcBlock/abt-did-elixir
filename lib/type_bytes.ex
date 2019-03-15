@@ -12,23 +12,23 @@ defmodule AbtDid.Type do
   end
 
   @spec node() :: AbtDid.Type.t()
-  def node, do: %AbtDid.Type{role_type: :node, key_type: :ed25519, hash_type: :sha256}
+  def node, do: %AbtDid.Type{role_type: :node, key_type: :ed25519, hash_type: :sha2}
 
   @spec validator() :: AbtDid.Type.t()
-  def validator, do: %AbtDid.Type{role_type: :validator, key_type: :ed25519, hash_type: :sha256}
+  def validator, do: %AbtDid.Type{role_type: :validator, key_type: :ed25519, hash_type: :sha2}
 
   def check_did_type!(%{role_type: role, hash_type: hash, key_type: key})
       when role in [:validator, :node] do
-    if hash == :sha256 and key == :ed25519 do
+    if hash == :sha2 and key == :ed25519 do
       :ok
     else
-      raise "The hash_type must be :sha256 and key_type must be :ed25519 if the role_type is :node or :validator."
+      raise "The hash_type must be :sha2 and key_type must be :ed25519 if the role_type is :node or :validator."
     end
   end
 
   def check_did_type!(%{hash_type: hash}) do
-    if hash == :sha256 do
-      raise "The hash_type :sha256 is only used for role_type :node or :validator."
+    if hash == :sha2 do
+      raise "The hash_type :sha2 is only used for role_type :node or :validator."
     else
       :ok
     end
@@ -54,8 +54,8 @@ defmodule AbtDid.TypeBytes do
       iex> AbtDid.TypeBytes.struct_to_bytes(%AbtDid.Type{role_type: :application, key_type: :secp256k1, hash_type: :sha3_512})
       "\f%"
 
-      iex> AbtDid.TypeBytes.struct_to_bytes(%AbtDid.Type{role_type: :application, hash_type: :sha256})
-      ** (RuntimeError) The hash_type :sha256 is only used for role_type :node or :validator.
+      iex> AbtDid.TypeBytes.struct_to_bytes(%AbtDid.Type{role_type: :application, hash_type: :sha2})
+      ** (RuntimeError) The hash_type :sha2 is only used for role_type :node or :validator.
   """
   @spec struct_to_bytes(Type.t()) :: binary()
   def struct_to_bytes(type) do
@@ -134,7 +134,7 @@ defmodule AbtDid.TypeBytes do
   defp hash_type_to_bytes(:sha3_384), do: <<3>>
   defp hash_type_to_bytes(:keccak_512), do: <<4>>
   defp hash_type_to_bytes(:sha3_512), do: <<5>>
-  defp hash_type_to_bytes(:sha256), do: <<6>>
+  defp hash_type_to_bytes(:sha2), do: <<6>>
   defp hash_type_to_bytes(hash), do: raise("Invliad hash type: #{inspect(hash)}")
 
   defp bytes_to_hash_type(<<0>>), do: :keccak
@@ -143,6 +143,6 @@ defmodule AbtDid.TypeBytes do
   defp bytes_to_hash_type(<<3>>), do: :sha3_384
   defp bytes_to_hash_type(<<4>>), do: :keccak_512
   defp bytes_to_hash_type(<<5>>), do: :sha3_512
-  defp bytes_to_hash_type(<<6>>), do: :sha256
+  defp bytes_to_hash_type(<<6>>), do: :sha2
   defp bytes_to_hash_type(hash), do: raise("Invliad hash type: #{inspect(hash)}")
 end
