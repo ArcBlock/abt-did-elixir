@@ -25,6 +25,12 @@ defmodule AbtDid do
   @doc """
   Generates the DID from secret key.
 
+  Options:
+
+    `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+
+    `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
+
   ## Examples
 
       iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
@@ -69,18 +75,76 @@ defmodule AbtDid do
   Generates the DID from publick key.
 
   Options:
-    Key `:form`
-        Values `:long` - The returned DID will be prefixed by "did:abt:"
-               `:short` - The retuned DID has only DID string.
-        `:encode`
-        Values `true` - The returned DID will be encoded as Base58.
-               `false` - The returned DID will be in binary format and `:form` will be set as `:short`
+
+    `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+
+    `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
   """
   @spec pk_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
   def pk_to_did(did_type, pk, opts \\ []) do
+    <<pk_hash::binary-size(20), _::binary>> = hash(did_type.hash_type, pk)
+    pk_hash_to_did(did_type, pk_hash, opts)
+  end
+
+  @doc """
+  Generate the DID from a public key hash.
+
+  Options:
+
+    `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+
+    `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
+
+  ## Examples
+
+      iex> sk = "3E0F9A313300226D51E33D5D98A126E86396956122E97E32D31CEE2277380B83FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
+      iex> did = AbtDid.sk_to_did(AbtDid.Type.validator, sk)
+      iex> pk_hash = AbtDid.get_pubkey_hash(did)
+      iex> AbtDid.pkhash_to_did(:validator, pk_hash)
+      "did:abt:zyt2vg6n8424c9xdXLGj1g27finM77ZN5KQL"
+
+      iex> pk = "FF47B3022FA503EAA1E9FA4B20FA8B16694EA56096F3A2E9109714062B3486D9" |> Base.decode16!()
+      iex> AbtDid.pk_to_did(AbtDid.Type.node, pk)
+      "did:abt:z89nF4GRYvgw5mqk8NqVVC7NeZLWKbcbQY7V"
+      iex> pk_hash = "D1B287B1ACB71A980568C99A3AB32A8ED1D9C1BB" |> Base.decode16!()
+      iex> AbtDid.pkhash_to_did(:node, pk_hash)
+      "did:abt:z89nF4GRYvgw5mqk8NqVVC7NeZLWKbcbQY7V"
+  """
+  def pkhash_to_did(_, pk_hash, opts \\ [])
+
+  @spec pkhash_to_did(:node, binary() | String.t(), Keyword.t()) :: String.t()
+  def pkhash_to_did(:node, pk_hash, opts) do
+    did_type = %AbtDid.Type{role_type: :node, hash_type: :sha2, key_type: :ed25519}
+
+    if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
+      pk_hash = Base.decode16!(pk_hash, case: :mixed)
+      pk_hash_to_did(did_type, pk_hash, opts)
+    else
+      pk_hash_to_did(did_type, pk_hash, opts)
+    end
+  end
+
+  @spec pkhash_to_did(:validator, binary() | String.t(), Keyword.t()) :: String.t()
+  def pkhash_to_did(:validator, pk_hash, opts) do
+    did_type = %AbtDid.Type{role_type: :validator, hash_type: :sha2, key_type: :ed25519}
+
+    if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
+      pk_hash = Base.decode16!(pk_hash, case: :mixed)
+      pk_hash_to_did(did_type, pk_hash, opts)
+    else
+      pk_hash_to_did(did_type, pk_hash, opts)
+    end
+  end
+
+  # Options:
+
+  # `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+
+  # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
+  @spec pk_hash_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
+  defp pk_hash_to_did(did_type, pk_hash, opts) do
     AbtDid.Type.check_did_type!(did_type)
     type_bytes = TypeBytes.struct_to_bytes(did_type)
-    <<pk_hash::binary-size(20), _::binary>> = hash(did_type.hash_type, pk)
     <<check_sum::binary-size(4), _::binary>> = hash(did_type.hash_type, type_bytes <> pk_hash)
 
     encode = Keyword.get(opts, :encode, true)
