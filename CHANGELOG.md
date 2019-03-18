@@ -1,3 +1,6 @@
+## 0.2.2 (March 18, 2019)
+  - Add method to convert pkhash to did
+
 ## 0.2.1 (March 15, 2019)
   - Rename to sha2 from sha256
 
