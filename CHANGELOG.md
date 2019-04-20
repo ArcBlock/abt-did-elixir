@@ -1,3 +1,6 @@
+## 0.2.3 (April 02, 2019)
+  - support tx role type
+
 ## 0.2.2 (March 18, 2019)
   - Add method to convert pkhash to did
 
