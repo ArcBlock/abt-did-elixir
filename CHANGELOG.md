@@ -1,3 +1,6 @@
+## 0.2.4 (May 02, 2019)
+  - Add tether type.
+
 ## 0.2.3 (April 02, 2019)
   - support tx role type
 

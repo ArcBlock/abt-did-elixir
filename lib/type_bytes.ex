@@ -18,7 +18,7 @@ defmodule AbtDid.Type do
   def validator, do: %AbtDid.Type{role_type: :validator, key_type: :ed25519, hash_type: :sha2}
 
   def check_did_type!(%{role_type: role, hash_type: hash, key_type: key})
-      when role in [:validator, :node] do
+      when role in [:validator, :node, :tether] do
     if hash == :sha2 and key == :ed25519 do
       :ok
     else
@@ -105,6 +105,7 @@ defmodule AbtDid.TypeBytes do
   defp role_type_to_bytes(:validator), do: <<8>>
   defp role_type_to_bytes(:group), do: <<9>>
   defp role_type_to_bytes(:tx), do: <<10>>
+  defp role_type_to_bytes(:tether), do: <<11>>
   defp role_type_to_bytes(:any), do: <<63>>
   defp role_type_to_bytes(role), do: raise("Invliad role type: #{inspect(role)}")
 
@@ -119,6 +120,7 @@ defmodule AbtDid.TypeBytes do
   defp bytes_to_role_type(<<8>>), do: :validator
   defp bytes_to_role_type(<<9>>), do: :group
   defp bytes_to_role_type(<<10>>), do: :tx
+  defp bytes_to_role_type(<<11>>), do: :tether
   defp bytes_to_role_type(<<63>>), do: :any
   defp bytes_to_role_type(role), do: raise("Invliad role type: #{inspect(role)}")
 

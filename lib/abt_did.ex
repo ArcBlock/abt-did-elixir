@@ -114,52 +114,20 @@ defmodule AbtDid do
 
   @spec pkhash_to_did(:node, binary() | String.t(), Keyword.t()) :: String.t()
   def pkhash_to_did(:node, pk_hash, opts) do
-    did_type = %AbtDid.Type{role_type: :node, hash_type: :sha2, key_type: :ed25519}
-
-    if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
-      pk_hash = Base.decode16!(pk_hash, case: :mixed)
-      pk_hash_to_did(did_type, pk_hash, opts)
-    else
-      pk_hash_to_did(did_type, pk_hash, opts)
-    end
+    %AbtDid.Type{role_type: :node, hash_type: :sha2, key_type: :ed25519}
+    |> pk_hash_to_did(pk_hash, opts)
   end
 
   @spec pkhash_to_did(:validator, binary() | String.t(), Keyword.t()) :: String.t()
   def pkhash_to_did(:validator, pk_hash, opts) do
-    did_type = %AbtDid.Type{role_type: :validator, hash_type: :sha2, key_type: :ed25519}
-
-    if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
-      pk_hash = Base.decode16!(pk_hash, case: :mixed)
-      pk_hash_to_did(did_type, pk_hash, opts)
-    else
-      pk_hash_to_did(did_type, pk_hash, opts)
-    end
+    %AbtDid.Type{role_type: :validator, hash_type: :sha2, key_type: :ed25519}
+    |> pk_hash_to_did(pk_hash, opts)
   end
 
-  # Options:
-
-  # `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
-
-  # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
-  @spec pk_hash_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
-  defp pk_hash_to_did(did_type, pk_hash, opts) do
-    AbtDid.Type.check_did_type!(did_type)
-    type_bytes = TypeBytes.struct_to_bytes(did_type)
-    <<check_sum::binary-size(4), _::binary>> = hash(did_type.hash_type, type_bytes <> pk_hash)
-
-    encode = Keyword.get(opts, :encode, true)
-    form = Keyword.get(opts, :form, :long)
-
-    case encode do
-      false ->
-        type_bytes <> pk_hash <> check_sum
-
-      true ->
-        case form do
-          :long -> @prefix <> Multibase.encode!(type_bytes <> pk_hash <> check_sum, :base58_btc)
-          :short -> Multibase.encode!(type_bytes <> pk_hash <> check_sum, :base58_btc)
-        end
-    end
+  @spec pkhash_to_did(:tether, binary() | String.t(), Keyword.t()) :: String.t()
+  def pkhash_to_did(:tether, pk_hash, opts) do
+    %AbtDid.Type{role_type: :tether, hash_type: :sha2, key_type: :ed25519}
+    |> pk_hash_to_did(pk_hash, opts)
   end
 
   @doc """
@@ -251,6 +219,45 @@ defmodule AbtDid do
   end
 
   ############   private functiosn    ############
+
+  # Options:
+  # `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+  # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
+  @spec pk_hash_to_did(DidType.t(), binary() | String.t(), Keyword.t()) :: String.t()
+  defp pk_hash_to_did(did_type, pk_hash, opts) do
+    pk_hash_bin =
+      if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
+        Base.decode16!(pk_hash, case: :mixed)
+      else
+        pk_hash
+      end
+
+    do_pk_hash_to_did(did_type, pk_hash_bin, opts)
+  end
+
+  # Options:
+  # `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
+  # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
+  @spec do_pk_hash_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
+  defp do_pk_hash_to_did(%DidType{} = did_type, pk_hash, opts) do
+    AbtDid.Type.check_did_type!(did_type)
+    type_bytes = TypeBytes.struct_to_bytes(did_type)
+    <<check_sum::binary-size(4), _::binary>> = hash(did_type.hash_type, type_bytes <> pk_hash)
+
+    encode = Keyword.get(opts, :encode, true)
+    form = Keyword.get(opts, :form, :long)
+
+    case encode do
+      false ->
+        type_bytes <> pk_hash <> check_sum
+
+      true ->
+        case form do
+          :long -> @prefix <> Multibase.encode!(type_bytes <> pk_hash <> check_sum, :base58_btc)
+          :short -> Multibase.encode!(type_bytes <> pk_hash <> check_sum, :base58_btc)
+        end
+    end
+  end
 
   defp sk_to_pk(:ed25519, sk), do: Mcrypto.sk_to_pk(@ed25519, sk)
   defp sk_to_pk(:secp256k1, sk), do: Mcrypto.sk_to_pk(@secp256k1, sk)
