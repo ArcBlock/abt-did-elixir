@@ -1,3 +1,6 @@
+## 0.3.0 (May 07, 2019)
+  - bump version and make the repo ready for publish
+
 ## 0.2.4 (May 02, 2019)
   - Add tether type.
 
