@@ -85,7 +85,8 @@ defmodule AbtDid.MixProject do
         "mix.exs",
         "README*",
         "version",
-        ".elixir_version"
+        ".elixir_version",
+        ".otp_version"
       ],
       licenses: ["Apache 2.0"],
       maintainers: [

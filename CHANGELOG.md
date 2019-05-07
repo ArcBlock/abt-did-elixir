@@ -1,3 +1,6 @@
+## 0.3.1 (May 07, 2019)
+  - add missing file
+
 ## 0.3.0 (May 07, 2019)
   - bump version and make the repo ready for publish
 
