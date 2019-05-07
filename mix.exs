@@ -72,7 +72,7 @@ defmodule AbtDid.MixProject do
 
   defp description do
     """
-    Forge Abi contains forge related protocol buffer definitions and Goldorin GraphQL definitions. It is a dependency for Forge and Forge Elixir SDK. Normally as a Dapp developer you won't use the code here directly but you'd use the types defined here.
+    Elixir implementation of [ABT DID protocol](https://github.com/ArcBlock/abt-did-spec).
     """
   end
 
