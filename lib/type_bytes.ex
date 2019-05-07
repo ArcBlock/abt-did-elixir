@@ -1,6 +1,6 @@
 defmodule AbtDid.Type do
   @moduledoc """
-  Represents the type of the DID.
+  Represents the type of the DID. A DID is composed of three inner types: `role_type`, `key_type` and `hash_type`.
   """
 
   use TypedStruct
@@ -11,12 +11,28 @@ defmodule AbtDid.Type do
     field(:hash_type, atom(), default: :sha3)
   end
 
+  @doc """
+  Returns the DID type representing a blockchain node.
+  """
   @spec node() :: AbtDid.Type.t()
   def node, do: %AbtDid.Type{role_type: :node, key_type: :ed25519, hash_type: :sha2}
 
+  @doc """
+  Returns the DID type representing a blockchain validator.
+  """
   @spec validator() :: AbtDid.Type.t()
   def validator, do: %AbtDid.Type{role_type: :validator, key_type: :ed25519, hash_type: :sha2}
 
+  @doc """
+  Returns the DID type representing a tether.
+  """
+  @spec tether() :: AbtDid.Type.t()
+  def tether, do: %AbtDid.Type{role_type: :tether, key_type: :ed25519, hash_type: :sha2}
+
+  @doc """
+  Checks if a Did type is valid or not.
+  """
+  @spec check_did_type!(AbtDid.Type.t()) :: :ok
   def check_did_type!(%{role_type: role, hash_type: hash, key_type: key})
       when role in [:validator, :node, :tether] do
     if hash == :sha2 and key == :ed25519 do
@@ -26,18 +42,20 @@ defmodule AbtDid.Type do
     end
   end
 
-  def check_did_type!(%{hash_type: hash}) do
+  def check_did_type!(%{role_type: _, hash_type: hash, key_type: _}) do
     if hash == :sha2 do
-      raise "The hash_type :sha2 is only used for role_type :node or :validator."
+      raise "The hash_type :sha2 is only used for role_type :node, :validator or :tether."
     else
       :ok
     end
   end
-
-  def check_did_type!(_), do: :ok
 end
 
 defmodule AbtDid.TypeBytes do
+  @moduledoc """
+  Encodes the DId type information into bytes.
+  """
+
   alias AbtDid.Type
 
   @doc """

@@ -42,8 +42,7 @@ defmodule AbtDid.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {AbtDid.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
@@ -66,6 +65,7 @@ defmodule AbtDid.MixProject do
       {:distillery, "~> 2.0", runtime: false},
 
       # dev & test
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: [:test, :integration]}
     ]
   end

@@ -1,4 +1,8 @@
 defmodule AbtDid.Signer do
+  @moduledoc """
+  Signs messages with the DID and verifies signatures.
+  """
+
   alias AbtDid
   alias AbtDid.Type
 
@@ -15,7 +19,8 @@ defmodule AbtDid.Signer do
   @prefix "did:abt:"
 
   @doc """
-  Generates and signs the token.
+  Generates an ABT DID auth token with extra information and signs it, returns the data in JWT format. The `extra` can also be used to override
+  the default values.
   """
   @spec gen_and_sign(Type.t() | String.t(), binary(), map()) :: String.t()
   def gen_and_sign(_, _, extra \\ %{})

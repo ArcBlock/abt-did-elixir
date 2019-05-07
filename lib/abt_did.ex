@@ -1,6 +1,8 @@
 defmodule AbtDid do
   @moduledoc """
-  Generates the DID from secret key or publick key.
+  ArcBlock DID (decentralized identification) Authentication Protocol is an open protocol that provides a secure decentralized authentication mechanism by using asymmetric cryptography technology.
+
+  This module contains methods to generate the DID from secret key or publick key or publick key hash.
   """
 
   alias AbtDid.TypeBytes
