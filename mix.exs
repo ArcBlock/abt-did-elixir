@@ -25,7 +25,17 @@ defmodule AbtDid.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package(),
+      # Docs
+      name: "AbtDid",
+      source_url: "https://github.com/arcblock/abt-did-elixir",
+      homepage_url: "https://github.com/arcblock/abt-did-elixir",
+      docs: [
+        main: "AbtDid",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -50,13 +60,43 @@ defmodule AbtDid.MixProject do
       {:jason, "~> 1.1"},
 
       # mcrypto
-      {:mcrypto, "~> 0.1"},
+      {:mcrypto, "~> 0.2"},
 
       # deployment
       {:distillery, "~> 2.0", runtime: false},
 
       # dev & test
       {:excoveralls, "~> 0.10", only: [:test, :integration]}
+    ]
+  end
+
+  defp description do
+    """
+    Forge Abi contains forge related protocol buffer definitions and Goldorin GraphQL definitions. It is a dependency for Forge and Forge Elixir SDK. Normally as a Dapp developer you won't use the code here directly but you'd use the types defined here.
+    """
+  end
+
+  defp package do
+    [
+      files: [
+        "config",
+        "lib",
+        "mix.exs",
+        "README*",
+        "version",
+        ".elixir_version"
+      ],
+      licenses: ["Apache 2.0"],
+      maintainers: [
+        "christinaleizhou@gmail.com",
+        "dingpl716@gmail.com",
+        "sunboshan@gmail.com",
+        "tyr.chen@gmail.com"
+      ],
+      links: %{
+        "GitHub" => "https://github.com/arcblock/abt-did-elixir",
+        "Docs" => "https://hexdocs.pm/abt-did-elixir"
+      }
     ]
   end
 end
