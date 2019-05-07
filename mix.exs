@@ -65,8 +65,8 @@ defmodule AbtDid.MixProject do
       {:distillery, "~> 2.0", runtime: false},
 
       # dev & test
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.10", only: [:test, :integration]}
+      {:excoveralls, "~> 0.10", only: [:test, :integration]},
+      {:ex_doc, "~> 0.19.0", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -84,7 +84,8 @@ defmodule AbtDid.MixProject do
         "mix.exs",
         "README*",
         "version",
-        ".elixir_version"
+        ".elixir_version",
+        ".otp_version"
       ],
       licenses: ["Apache 2.0"],
       maintainers: [
