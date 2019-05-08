@@ -83,6 +83,7 @@ defmodule AbtDid.MixProject do
         "lib",
         "mix.exs",
         "README*",
+        "LICENSE",
         "version",
         ".elixir_version",
         ".otp_version"

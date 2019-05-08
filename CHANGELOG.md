@@ -1,5 +1,7 @@
-## 0.3.2 (May 07, 2019)
-  - Add documents.
+## 0.3.2 (May 08, 2019)
+  - fix doc
+  - fix mix doc version
+  - Add documents. (#15)
 
 ## 0.3.1 (May 07, 2019)
   - add missing file
@@ -38,7 +40,7 @@
 
 ## 0.1.12 (February 05, 2019)
 - Rename to abt-did.
-  
+
 ## 0.1.11 (February 05, 2019)
 - Update make file.
 
