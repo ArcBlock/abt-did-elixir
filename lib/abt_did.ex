@@ -84,9 +84,15 @@ defmodule AbtDid do
   """
   @spec pk_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
   def pk_to_did(did_type, pk, opts \\ []) do
-    <<pk_hash::binary-size(20), _::binary>> = hash(did_type.hash_type, pk)
-    pk_hash_to_did(did_type, pk_hash, opts)
+    hash = hash(did_type.hash_type, pk)
+    pk_hash_to_did(did_type, hash, opts)
   end
+
+  @doc """
+  Alias to `pk_to_did`. See `pk_to_did` for more information.
+  """
+  @spec data_to_did(DidType.t(), binary(), Keyword.t()) :: String.t()
+  def data_to_did(did_type, data, opts \\ []), do: pk_to_did(did_type, data, opts)
 
   @doc """
   Generate the DID from a public key hash.
@@ -115,22 +121,34 @@ defmodule AbtDid do
   def pkhash_to_did(_, pk_hash, opts \\ [])
 
   @spec pkhash_to_did(:node, binary() | String.t(), Keyword.t()) :: String.t()
-  def pkhash_to_did(:node, pk_hash, opts) do
+  def pkhash_to_did(:node, hash, opts) do
     %AbtDid.Type{role_type: :node, hash_type: :sha2, key_type: :ed25519}
-    |> pk_hash_to_did(pk_hash, opts)
+    |> pk_hash_to_did(hash, opts)
   end
 
   @spec pkhash_to_did(:validator, binary() | String.t(), Keyword.t()) :: String.t()
-  def pkhash_to_did(:validator, pk_hash, opts) do
+  def pkhash_to_did(:validator, hash, opts) do
     %AbtDid.Type{role_type: :validator, hash_type: :sha2, key_type: :ed25519}
-    |> pk_hash_to_did(pk_hash, opts)
+    |> pk_hash_to_did(hash, opts)
   end
 
   @spec pkhash_to_did(:tether, binary() | String.t(), Keyword.t()) :: String.t()
-  def pkhash_to_did(:tether, pk_hash, opts) do
+  def pkhash_to_did(:tether, hash, opts) do
     %AbtDid.Type{role_type: :tether, hash_type: :sha2, key_type: :ed25519}
-    |> pk_hash_to_did(pk_hash, opts)
+    |> pk_hash_to_did(hash, opts)
   end
+
+  @spec pkhash_to_did(atom(), binary() | String.t(), Keyword.t()) :: String.t()
+  def pkhash_to_did(role_type, hash, opts) do
+    %AbtDid.Type{role_type: role_type, hash_type: :sha3, key_type: :ed25519}
+    |> pk_hash_to_did(hash, opts)
+  end
+
+  @doc """
+  Alias to `pkhash_to_did`. See `pkhash_to_did` for more information.
+  """
+  @spec hash_to_did(atom(), binary() | String.t(), Keyword.t()) :: String.t()
+  def hash_to_did(type, hash, opts), do: pkhash_to_did(type, hash, opts)
 
   @doc """
   Verifies if a public key and a DID match with each other.
@@ -226,15 +244,21 @@ defmodule AbtDid do
   # `:form`: Determines the form of DID returned. `:long` - The returned DID will be prefixed by "did:abt:". `:short` - The retuned DID has only DID string.
   # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
   @spec pk_hash_to_did(DidType.t(), binary() | String.t(), Keyword.t()) :: String.t()
-  defp pk_hash_to_did(did_type, pk_hash, opts) do
+  defp pk_hash_to_did(did_type, hash, opts) do
     pk_hash_bin =
-      if byte_size(pk_hash) == 40 and String.valid?(pk_hash) do
-        Base.decode16!(pk_hash, case: :mixed)
-      else
-        pk_hash
+      case String.valid?(hash) do
+        true ->
+          case Base.decode16(hash, case: :mixed) do
+            {:ok, v} -> v
+            _ -> hash
+          end
+
+        _ ->
+          hash
       end
 
-    do_pk_hash_to_did(did_type, pk_hash_bin, opts)
+    <<pk_hash::binary-size(20), _::binary>> = pk_hash_bin
+    do_pk_hash_to_did(did_type, pk_hash, opts)
   end
 
   # Options:
