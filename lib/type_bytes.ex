@@ -73,7 +73,7 @@ defmodule AbtDid.TypeBytes do
       "\f%"
 
       iex> AbtDid.TypeBytes.struct_to_bytes(%AbtDid.Type{role_type: :application, hash_type: :sha2})
-      ** (RuntimeError) The hash_type :sha2 is only used for role_type :node or :validator.
+      ** (RuntimeError) The hash_type :sha2 is only used for role_type :node, :validator or :tether.
   """
   @spec struct_to_bytes(Type.t()) :: binary()
   def struct_to_bytes(type) do

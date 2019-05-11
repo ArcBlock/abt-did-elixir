@@ -245,7 +245,19 @@ defmodule AbtDid do
   # `:encode`: Detemines whether or not encode the DID. `true` - The returned DID will be encoded as Base58. `false` - The returned DID will be in binary format and `:form` will be set as `:short`.
   @spec pk_hash_to_did(DidType.t(), binary() | String.t(), Keyword.t()) :: String.t()
   defp pk_hash_to_did(did_type, hash, opts) do
-    <<pk_hash::binary-size(20), _::binary>> = hash
+    pk_hash_bin =
+      case String.valid?(hash) do
+        true ->
+          case Base.decode16(hash, case: :mixed) do
+            {:ok, v} -> v
+            _ -> hash
+          end
+
+        _ ->
+          hash
+      end
+
+    <<pk_hash::binary-size(20), _::binary>> = pk_hash_bin
     do_pk_hash_to_did(did_type, pk_hash, opts)
   end
 
