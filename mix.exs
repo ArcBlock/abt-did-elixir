@@ -61,9 +61,6 @@ defmodule AbtDid.MixProject do
       # mcrypto
       {:mcrypto, "~> 0.2"},
 
-      # deployment
-      {:distillery, "~> 2.0", runtime: false},
-
       # dev & test
       {:excoveralls, "~> 0.10", only: [:test, :integration]},
       {:ex_doc, "~> 0.19.0", only: [:dev, :test], runtime: false}

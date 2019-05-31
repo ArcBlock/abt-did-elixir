@@ -1,3 +1,7 @@
+## 0.3.4 (May 30, 2019)
+  - remove distillery as deps
+
+
 ## 0.3.3 (May 10, 2019)
 
 
