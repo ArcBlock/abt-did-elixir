@@ -1,3 +1,6 @@
+## 0.3.5 (June 25, 2019)
+  - Add swap in DID type.
+
 ## 0.3.4 (May 30, 2019)
   - remove distillery as deps
 
