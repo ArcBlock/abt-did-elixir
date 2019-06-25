@@ -46,4 +46,15 @@ defmodule AbtDidTest do
       assert true === AbtDid.match_pk?(did, pk)
     end)
   end
+
+  test "Tether and swap" do
+    role = [:tether, :swap]
+
+    Enum.each(role, fn r ->
+      hash = 64 |> :crypto.strong_rand_bytes() |> Base.encode16()
+      did = AbtDid.hash_to_did(r, hash, form: :short)
+      assert String.length(did) >= 35
+      assert true === AbtDid.is_valid?(did)
+    end)
+  end
 end
