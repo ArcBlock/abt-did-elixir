@@ -30,11 +30,17 @@ defmodule AbtDid.Type do
   def tether, do: %AbtDid.Type{role_type: :tether, key_type: :ed25519, hash_type: :sha2}
 
   @doc """
+  Returns the DID type representing a swap.
+  """
+  @spec swap() :: AbtDid.Type.t()
+  def swap, do: %AbtDid.Type{role_type: :swap, key_type: :ed25519, hash_type: :sha2}
+
+  @doc """
   Checks if a Did type is valid or not.
   """
   @spec check_did_type!(AbtDid.Type.t()) :: :ok
   def check_did_type!(%{role_type: role, hash_type: hash, key_type: key})
-      when role in [:validator, :node, :tether] do
+      when role in [:validator, :node, :tether, :swap] do
     if hash == :sha2 and key == :ed25519 do
       :ok
     else
@@ -44,7 +50,7 @@ defmodule AbtDid.Type do
 
   def check_did_type!(%{role_type: _, hash_type: hash, key_type: _}) do
     if hash == :sha2 do
-      raise "The hash_type :sha2 is only used for role_type :node, :validator or :tether."
+      raise "The hash_type :sha2 is only used for role_type :node, :validator, :tether or :swap."
     else
       :ok
     end
@@ -73,7 +79,7 @@ defmodule AbtDid.TypeBytes do
       "\f%"
 
       iex> AbtDid.TypeBytes.struct_to_bytes(%AbtDid.Type{role_type: :application, hash_type: :sha2})
-      ** (RuntimeError) The hash_type :sha2 is only used for role_type :node, :validator or :tether.
+      ** (RuntimeError) The hash_type :sha2 is only used for role_type :node, :validator, :tether or :swap.
   """
   @spec struct_to_bytes(Type.t()) :: binary()
   def struct_to_bytes(type) do
@@ -124,6 +130,7 @@ defmodule AbtDid.TypeBytes do
   defp role_type_to_bytes(:group), do: <<9>>
   defp role_type_to_bytes(:tx), do: <<10>>
   defp role_type_to_bytes(:tether), do: <<11>>
+  defp role_type_to_bytes(:swap), do: <<12>>
   defp role_type_to_bytes(:any), do: <<63>>
   defp role_type_to_bytes(role), do: raise("Invliad role type: #{inspect(role)}")
 
@@ -139,6 +146,7 @@ defmodule AbtDid.TypeBytes do
   defp bytes_to_role_type(<<9>>), do: :group
   defp bytes_to_role_type(<<10>>), do: :tx
   defp bytes_to_role_type(<<11>>), do: :tether
+  defp bytes_to_role_type(<<12>>), do: :swap
   defp bytes_to_role_type(<<63>>), do: :any
   defp bytes_to_role_type(role), do: raise("Invliad role type: #{inspect(role)}")
 

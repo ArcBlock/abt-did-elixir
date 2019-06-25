@@ -138,6 +138,12 @@ defmodule AbtDid do
     |> pk_hash_to_did(hash, opts)
   end
 
+  @spec pkhash_to_did(:swap, binary() | String.t(), Keyword.t()) :: String.t()
+  def pkhash_to_did(:swap, hash, opts) do
+    %AbtDid.Type{role_type: :swap, hash_type: :sha2, key_type: :ed25519}
+    |> pk_hash_to_did(hash, opts)
+  end
+
   @spec pkhash_to_did(atom(), binary() | String.t(), Keyword.t()) :: String.t()
   def pkhash_to_did(role_type, hash, opts) do
     %AbtDid.Type{role_type: role_type, hash_type: :sha3, key_type: :ed25519}
