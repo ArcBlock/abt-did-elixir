@@ -6,7 +6,19 @@ defmodule AbtDidTest do
   doctest AbtDid
 
   test "Generate did and verify with PK" do
-    role = [:account, :device, :application, :smart_contract, :bot, :stake, :asset, :group, :tx]
+    role = [
+      :account,
+      :device,
+      :application,
+      :smart_contract,
+      :bot,
+      :stake,
+      :asset,
+      :group,
+      :tx,
+      :delegation
+    ]
+
     key = [:ed25519, :secp256k1]
     hash = [:keccak, :sha3, :keccak_384, :sha3_384, :keccak_512, :sha3_512]
 

@@ -1,3 +1,6 @@
+## 0.3.6 (July 23, 2019)
+  - Add delegation in DID type
+
 ## 0.3.5 (June 25, 2019)
   - Add swap in DID type.
 
