@@ -16,7 +16,7 @@ defmodule AbtDidTest do
       :asset,
       :group,
       :tx,
-      :delegation
+      :delegate
     ]
 
     key = [:ed25519, :secp256k1]
