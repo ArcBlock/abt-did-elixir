@@ -131,6 +131,7 @@ defmodule AbtDid.TypeBytes do
   defp role_type_to_bytes(:tx), do: <<10>>
   defp role_type_to_bytes(:tether), do: <<11>>
   defp role_type_to_bytes(:swap), do: <<12>>
+  defp role_type_to_bytes(:delegate), do: <<13>>
   defp role_type_to_bytes(:any), do: <<63>>
   defp role_type_to_bytes(role), do: raise("Invliad role type: #{inspect(role)}")
 
@@ -147,6 +148,7 @@ defmodule AbtDid.TypeBytes do
   defp bytes_to_role_type(<<10>>), do: :tx
   defp bytes_to_role_type(<<11>>), do: :tether
   defp bytes_to_role_type(<<12>>), do: :swap
+  defp bytes_to_role_type(<<13>>), do: :delegate
   defp bytes_to_role_type(<<63>>), do: :any
   defp bytes_to_role_type(role), do: raise("Invliad role type: #{inspect(role)}")
 
