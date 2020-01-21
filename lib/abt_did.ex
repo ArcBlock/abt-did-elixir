@@ -24,6 +24,18 @@ defmodule AbtDid do
 
   @prefix "did:abt:"
 
+  @spec sk_to_wallet(DidType.t(), binary(), Keyword.t()) :: String.t()
+  def sk_to_wallet(did_type, sk, opts \\ []) do
+    pk = sk_to_pk(did_type.key_type, sk)
+    did = pk_to_did(did_type, pk, form: :short)
+
+    %{
+      sk: sk,
+      pk: pk,
+      address: did
+    }
+  end
+
   @doc """
   Generates the DID from secret key.
 
