@@ -1,3 +1,6 @@
+## 0.3.7 (January 18, 2020)
+  - Add sk_to_wallet
+
 ## 0.3.6 (July 23, 2019)
   - Add delegation in DID type
 
