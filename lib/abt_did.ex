@@ -27,7 +27,7 @@ defmodule AbtDid do
   @spec sk_to_wallet(DidType.t(), binary(), Keyword.t()) :: String.t()
   def sk_to_wallet(did_type, sk, opts \\ []) do
     pk = sk_to_pk(did_type.key_type, sk)
-    did = pk_to_did(did_type, pk, form: :short)
+    did = pk_to_did(did_type, pk, opts)
 
     %{
       sk: sk,
